@@ -28,7 +28,7 @@ In this lab we will create two VMs in the same VNET. One will be a Domain Contro
 <img src="https://i.imgur.com/z7cqW8Z.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
-Client-1 will need connect to DC-1 to ensure connectivity by pinging DC. So, you be receiving a request time out message.
+Client-1 will need connect to DC-1 to ensure connectivity by pinging DC. So, you should be receiving a request time out message.
 </p>
 <br />
 
@@ -54,50 +54,56 @@ Next step is to install active directory:
 <img src="https://i.imgur.com/kcgvzdE.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
-While logged in DC-1, we will work on installing an admin and user account in active directory
+From there on we will create an admin and normal user account in active directory
   <ul>
-    <li>Login to DC-1 and install Active Directory Domain Services</li>
-    <li>Promote as a DC: Setup a new forest as mydomain.com (can be anything, just remember what it is</li>
-    <li>Restart and then log back into DC-1 as user: mydomain.com\username</li>
+    <li>In Active Directory Users and Computers (ADUC), create an Organizational Unit (OU) called _EMPLOYEES</li>
+    <li>Create a new OU named _ADMINS</li>
+    <li>Create a new employee named “Jane Doe” (same password) with the username of jane_admin</li>
+    <li>Add jane_admin to the “Domain Admins” Security Group</li>
+    <li>Log out/close the Remote Desktop connection to DC-1 and log back in as mydomain.com\jane_admin</li>
+    <li>Utilize jane_admin as your admin account from now on</li>
   </ul>
 </p>
+<br />
 
-<img src="https://i.imgur.com/jbrGTXW.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-</p>
-<img src="https://i.imgur.com/kvcm2cY.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-</p>
 <p>
-</p>
-<p>
-We have to join Client-1 to the domain in order to do so navigate to your system settings and go to about. Off to the right select rename this pc (advanced). From there select to change the domain. Enter "mydomain.com" after that enter your credentials from mydomain.com\labuser. Your computer will restart and then client-1 will be a part of mydomain.com
-</p>
-<br />
-<p>
-  <p>
+<img src="https://i.imgur.com/jbrGTXW.png" height="80%" width="80%" alt="Disk Sanitization Steps"/><br />
 <img src="https://i.imgur.com/Ze0Em5e.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
-Wonderufl Client-1 is now a part of the domain. Now we will set up remote desktop for non-administrative users on Client-1. We have to log into Client-1 as an admin and open system properties. Click on "Remote Desktop", allow "domain users" access to remote desktop. After completing those steps you should be able to log into Client-1 as a normal user.
+Join Client-1 to you your domain
+  <ul>
+    <li>From the Azure Portal, set Client-1’s DNS settings to the DC’s Private IP address</li>
+    <li>From the Azure Portal, restart Client-1</li>
+    <li>Login to Client-1 (Remote Desktop) as the original local admin (labuser) and join it to the domain (computer will restart)</li>
+    <li>Login to the Domain Controller (Remote Desktop) and verify Client-1 shows up in Active Directory Users and Computers (ADUC) inside the “Computers” container on the root of the domain</li>
+  </ul>
 </p>
 <br />
 
 <p>
-  <p>
 <img src="https://i.imgur.com/SApOKiE.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
-Lastly to verify that noraml users can RDP into Client-1 we will use a script to generate thousands of users into the domain. We will input the script in powershell, after the users are created we will select one and RDP into Client-1.
+Setup Remote Desktop for non-administrative users on Client-1
+  <ul>
+    <li>Log into Client-1 as mydomain.com\jane_admin and open system properties</li>
+      <ul>
+        <li>Click Remote Desktop</li>
+        <li>Allow domain users access to remote desktop</li>
+      </ul>
+    <li>You can now log into Client-1 as a normal, non-administrative user now</li>
+  </ul>
 </p>
 <br />
-<img src="https://i.imgur.com/EzWG8ug.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<p>
-<p>
-  <p>
-<img src="https://i.imgur.com/Gkpe68K.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
-</p>
-<img src="https://i.imgur.com/n3gMwQV.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
-<p>
-As you can see the Powershell script created a user with the username "bab.hubo" We were able to login to Client-1 with his credentials as a normal user. 
-</p>
 
+<p>
+<img src="https://i.imgur.com/EzWG8ug.png" height="80%" width="80%" alt="Disk Sanitization Steps"/><br />
+<img src="https://i.imgur.com/Gkpe68K.png" height="60%" width="60%" alt="Disk Sanitization Steps"/><br />
+</p>
+Afer logging into DC-1 as jane_admin, open PowerShell_ise as an administrator to run a script, creating thousands of accounts. 
+  <ul>
+    <li>When finished, open AUDC and observe the accounts in the appropriate OU</li>
+    <li>Log into Client-1 with one of the accounts</li>
+  </ul>
+</p>
